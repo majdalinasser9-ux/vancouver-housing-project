@@ -50,12 +50,12 @@ vancouver-housing-project/
 │   └── 04_geo_visualization.ipynb     # Interactive heatmap & geographic analysis
 │
 ├── data/
-│   ├── raw/
+│   ├── raw/                           # Raw datasets (not tracked by Git)
 │   │   ├── canada_housing/            # Kaggle Canada housing dataset
 │   │   └── local-area-boundary.geojson
 │   └── processed/
-│       ├── vancouver_housing_cleaned.csv
-│       ├── housing_data_ml_ready.csv          # Input to modeling notebook
+│       ├── housing_data_cleaned.csv         # After cleaning (3,665 rows)
+│       ├── housing_data_ml_ready.csv        # After spatial join + encoding (3,542 rows)
 │       ├── vancouver_with_neighborhoods.csv
 │       └── neighborhood_analysis.csv
 │
@@ -63,7 +63,11 @@ vancouver-housing-project/
 │   ├── figures/
 │   │   ├── price_distribution.png
 │   │   ├── correlation_heatmap.png
-│   │   ├── rf_feature_importance.png
+│   │   ├── price_log_transform.png
+│   │   ├── 03_lr_predictions.png
+│   │   ├── 03_rf_predictions.png
+│   │   ├── 03_model_comparison.png
+│   │   ├── 03_feature_importance.png
 │   │   ├── 04_neighborhoods_by_price.png
 │   │   └── vancouver_price_heatmap.html
 │   └── models/
@@ -86,19 +90,21 @@ vancouver-housing-project/
 
 | Neighborhood | Avg Price | Median Price | Properties |
 |---|---|---|---|
-| 🏰 Shaughnessy | $8,171,901 | $7,185,000 | 74 |
-| 🌊 West Point Grey | $6,109,759 | $4,050,000 | 87 |
-| 🎯 Kerrisdale | $5,712,916 | $4,180,000 | 109 |
-| 🏢 Downtown | $1,518,970 | $989,400 | 790 |
-| 🏘️ Strathcona | $1,026,237 | $823,500 | 34 |
+| 🏰 Shaughnessy | $5,690,714 | $6,129,000 | 54 |
+| 🌊 West Point Grey | $4,001,537 | $3,843,500 | 82 |
+| 🌳 Dunbar-Southlands | $3,894,745 | $3,798,000 | 137 |
+| 🎯 Kerrisdale | $3,525,057 | $3,363,360 | 89 |
+| 🏢 Downtown | $1,367,827 | $988,000 | 874 |
+| 🏘️ Strathcona | $1,058,906 | $848,500 | 48 |
 
-> **Key Insight:** There is an **8x price variation** across Vancouver neighborhoods. Location is the single strongest driver of housing price.
+> **Key Insight:** There is a **5x+ price variation** across Vancouver neighborhoods. Location is the single strongest driver of housing price.
 
 ### Dataset Summary
-- **3,860** Vancouver properties loaded and filtered
-- **3,375** properties after cleaning
+- **3,860** total Vancouver properties loaded
+- **3,665** properties after cleaning
+- **3,542** properties after spatial join & encoding
 - **22** neighborhoods mapped via spatial join
-- Features include: bedrooms, bathrooms, square footage, latitude/longitude, neighborhood (one-hot encoded)
+- **34** features used for modeling (including one-hot encoded neighborhoods)
 
 ---
 
@@ -115,20 +121,21 @@ vancouver-housing-project/
 
 | Metric | Linear Regression | Random Forest | Winner |
 |---|---|---|---|
-| Testing R² | — | — | — |
-| MAE ($) | — | — | — |
-| RMSE ($) | — | — | — |
-| CV R² (5-fold) | — | — | — |
+| Training R² | 0.7839 | 0.9815 | 🏆 RF |
+| Testing R² | 0.7738 | 0.8705 | 🏆 RF |
+| MAE ($) | $433,070 | $297,602 | 🏆 RF |
+| RMSE ($) | $700,136 | $529,809 | 🏆 RF |
+| CV R² (5-fold) | 0.7275 ± 0.0343 | 0.8316 ± 0.0398 | 🏆 RF |
 
-> To be filled in after Notebook 03 is complete.
+> **Winner: Random Forest** — explains **87%** of Vancouver housing price variation with an average prediction error of **$297,602**. Linear Regression explains 77% with an average error of $433,070.
 
 ---
 
 ## 🗺️ Geographic Analysis
 
-- Interactive price heatmap: `outputs/figures/vancouver_price_heatmap.html`
-- Neighborhood price bar chart: `outputs/figures/04_neighborhoods_by_price.png`
-- Spatial join using official Vancouver GeoJSON boundary data
+- Interactive price heatmap → `outputs/figures/vancouver_price_heatmap.html`
+- Neighborhood price bar chart → `outputs/figures/04_neighborhoods_by_price.png`
+- Spatial join using official Vancouver GeoJSON boundary data to assign each property to its neighborhood
 
 ---
 
@@ -161,7 +168,7 @@ pip install -r requirements.txt
 01_eda → 02_cleaning → 02b_spatial_join → 03_modeling → 04_geo_visualization
 ```
 
-> Use `housing_data_ml_ready.csv` as input to `03_modeling.ipynb` — this file includes the spatial join and one-hot encoded neighborhood columns.
+> Use `housing_data_ml_ready.csv` as input to `03_modeling.ipynb`
 
 ---
 
