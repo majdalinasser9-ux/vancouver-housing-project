@@ -6,7 +6,7 @@
 
 ---
 
-## 📊 PROJECT OVERVIEW
+## 📊 Project Overview
 
 This project applies **machine learning** to understand what drives housing prices in Vancouver. Using data from 3,860+ properties across 22 neighborhoods, we built predictive models to identify key price factors and discovered natural market segments.
 
@@ -14,13 +14,13 @@ This project applies **machine learning** to understand what drives housing pric
 
 ---
 
-## 🎯 RESULTS AT A GLANCE
+## 🎯 Results at a Glance
 
 ### 🏆 Best Model: Random Forest
 - **Testing R²:** 87.05% (explains 87% of price variation)
 - **MAE:** $297,602 (average prediction error)
 - **RMSE:** $529,809
-- **Accuracy:** Significantly outperforms Linear Regression baseline by 9.67%
+- **Improvement over Linear Regression:** +9.67% accuracy, $135K lower error
 
 ### 🔑 Top 3 Price Drivers
 1. **Square Footage** — 77.6% importance (dominant!)
@@ -28,162 +28,173 @@ This project applies **machine learning** to understand what drives housing pric
 3. **Latitude** — 3.7% importance (north-south location)
 
 ### 💰 Price by Neighborhood
+
 | Neighborhood | Avg Price | Status |
 |---|---|---|
-| 🏰 Shaughnessy | $8.17M | Luxury |
-| 🌊 West Point Grey | $6.11M | Premium |
-| 🎯 Kerrisdale | $5.71M | Premium |
-| 🏘️ Strathcona | $1.03M | Budget |
-| **8x difference!** | — | **Location matters** |
+| 🏰 Shaughnessy | $5,690,714 | Luxury |
+| 🌊 West Point Grey | $4,001,537 | Premium |
+| 🌳 Dunbar-Southlands | $3,894,745 | Premium |
+| 🎯 Kerrisdale | $3,525,057 | Premium |
+| 🏢 Downtown | $1,367,827 | Condo Market |
+| 🏘️ Strathcona | $1,058,906 | Budget |
+
+> **5x+ price variation across neighborhoods — location is a key price driver!**
 
 ### 🤖 Market Segments (K-Means)
-- **Budget:** Affordable East Vancouver
-- **Mid-Range:** Standard market properties
-- **Premium:** High-end West side homes
-- **Luxury:** Ultra-premium $5M+ properties
+- **Budget** — Affordable East Vancouver
+- **Mid-Range** — Standard market properties
+- **Premium** — High-end West side homes
+- **Luxury** — Ultra-premium $5M+ properties
 
 ---
 
-## 📁 PROJECT STRUCTURE
+## 📁 Project Structure
+
+```
 vancouver-housing-project/
+│
 ├── notebooks/
-│   ├── 01_eda.ipynb                 # EDA & visualizations
-│   ├── 02_cleaning.ipynb            # Data preprocessing
-│   ├── 02b_spatial_join.ipynb       # Map to neighborhoods
-│   ├── 03_modeling.ipynb            # LR & Random Forest models
-│   └── 05_clustering.ipynb          # K-Means segmentation
+│   ├── 01_eda.ipynb                   # Exploratory Data Analysis
+│   ├── 02_cleaning.ipynb              # Data cleaning & feature engineering
+│   ├── 02b_spatial_join.ipynb         # Spatial join — adds neighbourhood column
+│   ├── 03_modeling.ipynb              # Linear Regression & Random Forest models
+│   ├── 04_geographic_analysis.ipynb   # Interactive heatmap & geographic analysis
+│   └── 05_clustering.ipynb            # K-Means market segmentation
+│
 ├── data/
-│   ├── raw/
-│   │   ├── canada_housing/          # Kaggle dataset
+│   ├── raw/                           # Raw datasets (not tracked by Git)
+│   │   ├── canada_housing/
 │   │   └── local-area-boundary.geojson
 │   └── processed/
-│       ├── vancouver_housing_cleaned.csv
-│       └── vancouver_with_neighborhoods.csv
+│       ├── housing_data_cleaned.csv
+│       ├── housing_data_ml_ready.csv
+│       ├── vancouver_with_neighborhoods.csv
+│       └── neighborhood_analysis.csv
+│
 ├── outputs/
 │   ├── figures/
+│   │   ├── price_distribution.png
+│   │   ├── correlation_heatmap.png
+│   │   ├── price_log_transform.png
+│   │   ├── 03_lr_predictions.png
 │   │   ├── 03_rf_predictions.png
+│   │   ├── 03_model_comparison.png
 │   │   ├── 03_feature_importance.png
 │   │   ├── 04_neighborhoods_by_price.png
-│   │   ├── 05_vancouver_clusters_map.html
 │   │   └── vancouver_price_heatmap.html
 │   └── models/
 │       ├── linear_regression_model.pkl
 │       └── random_forest_model.pkl
+│
+├── src/
+│   └── __init__.py
 ├── requirements.txt
 └── README.md
----
+```
 
-## 📊 NOTEBOOKS OVERVIEW
-
-### **01_eda.ipynb** — Exploratory Data Analysis
-- Price distribution analysis ($289K - $49.8M)
-- Correlation heatmap (Square footage: 0.83)
-- Missing values assessment & cleaning
-
-### **02b_spatial_join.ipynb** — Geographic Mapping
-- GeoJSON spatial join: properties → neighborhoods
-- 22 neighborhoods identified
-- Neighborhood price analysis (8x variation)
-
-### **03_modeling.ipynb** — Predictive Modeling ✅
-- Linear Regression: R² = 0.7738
-- **Random Forest: R² = 0.8705** 🏆
-- Feature importance rankings
-- Model comparison & evaluation
-
-### **05_clustering.ipynb** — Market Segmentation
-- K-Means clustering (K=4)
-- 4 market tiers identified
-- Interactive neighborhood maps
-- Cluster characteristic analysis
+> **Notebook order:** `01_eda` → `02_cleaning` → `02b_spatial_join` → `03_modeling` → `04_geographic_analysis` → `05_clustering`
 
 ---
 
-## 🏆 MODEL COMPARISON
+## 🏆 Model Comparison
 
 ### Linear Regression (Baseline)
+
 | Metric | Value |
-|--------|-------|
+|---|---|
+| Training R² | 0.7839 |
 | Testing R² | 0.7738 (77.4%) |
 | MAE | $433,070 |
 | RMSE | $700,136 |
-| CV R² | 0.7275 ± 0.0343 |
+| CV R² (5-fold) | 0.7275 ± 0.0343 |
 
-### Random Forest (WINNER) 🏆
+### Random Forest (Winner) 🏆
+
 | Metric | Value |
-|--------|-------|
+|---|---|
+| Training R² | 0.9815 |
 | Testing R² | **0.8705 (87.1%)** |
 | MAE | **$297,602** |
 | RMSE | **$529,809** |
-| CV R² | **0.8316 ± 0.0398** |
+| CV R² (5-fold) | **0.8316 ± 0.0398** |
 
-**Improvement:** 9.67% higher accuracy, $135K lower error
-
----
-
-## 🔑 KEY INSIGHTS
-
-### For Buyers:
-✅ Square footage is #1 price driver (77.6%)  
-✅ Location matters less than size (combined 14.9%)  
-✅ Budget properties cluster in East Vancouver  
-✅ Luxury properties concentrated on West side  
-
-### For Sellers:
-✅ Maximize square footage for value  
-✅ West-side location commands 5-8x premium  
-✅ Shaughnessy avg $8.17M (luxury tier)  
-✅ Downtown median $1.52M (condo market)  
-
-### For Real Estate Professionals:
-✅ 87% accurate pricing predictions  
-✅ Use Random Forest model for valuations  
-✅ 4-tier market segmentation for client matching  
-✅ Neighborhood comparison tools available  
+> **Winner: Random Forest** — explains 87% of price variation with an average error of $297,602.
 
 ---
 
-## 🛠️ SETUP INSTRUCTIONS
+## 📊 Notebooks Overview
 
-### Prerequisites
-- Python 3.10+
-- pip
+**01_eda.ipynb** — Exploratory Data Analysis
+- Price distribution, correlation heatmap, missing values analysis
 
-### Installation
+**02_cleaning.ipynb** — Data Cleaning
+- Price outlier removal, feature selection, log-transform
+
+**02b_spatial_join.ipynb** — Geographic Mapping
+- GeoJSON spatial join → 22 neighborhoods, one-hot encoding
+
+**03_modeling.ipynb** — Predictive Modeling
+- Linear Regression vs Random Forest, 5-fold CV, feature importance
+
+**04_geographic_analysis.ipynb** — Geographic Visualization
+- Interactive folium heatmap, neighborhood price rankings
+
+**05_clustering.ipynb** — Market Segmentation
+- K-Means (K=4), 4 market tiers, interactive cluster maps
+
+---
+
+## 🔑 Key Insights
+
+**For Buyers:**
+- Square footage is the #1 price driver (77.6%)
+- Budget properties cluster in East Vancouver (Strathcona, Killarney)
+- Luxury properties concentrated on the West side
+
+**For Sellers:**
+- West-side location commands 5x+ premium
+- Shaughnessy avg $5.69M — highest tier
+- Downtown median $988K — condo-dominated market
+
+**For Real Estate Professionals:**
+- Random Forest achieves 87% pricing accuracy
+- 4-tier market segmentation for client matching
+- Neighborhood comparison tools available
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 ```bash
 git clone https://github.com/majdalinasser9-ux/vancouver-housing-project.git
 cd vancouver-housing-project
+```
 
+### 2. Set up virtual environment
+```bash
 python -m venv .venv
-source .venv/bin/activate  # Mac/Linux
-# or .venv\Scripts\activate (Windows)
+source .venv/bin/activate      # Mac/Linux
+# or .venv\Scripts\activate    # Windows
+```
 
+### 3. Install dependencies
+```bash
 pip install -r requirements.txt
 ```
 
-### Run Notebooks
-```bash
-jupyter notebook notebooks/01_eda.ipynb
+### 4. Download datasets
+- **Kaggle Canada Housing** → [kaggle.com/datasets/yuliiabulana/canada-housing](https://www.kaggle.com/datasets/yuliiabulana/canada-housing) → save to `data/raw/canada_housing/`
+- **Vancouver GeoJSON** → [opendata.vancouver.ca](https://opendata.vancouver.ca/explore/dataset/local-area-boundary/) → save to `data/raw/local-area-boundary.geojson`
+
+### 5. Run notebooks in order
+```
+01_eda → 02_cleaning → 02b_spatial_join → 03_modeling → 04_geographic_analysis → 05_clustering
 ```
 
 ---
 
-## 📊 DATA
-
-| Source | Records | Features |
-|--------|---------|----------|
-| Kaggle Canada Housing | 15,000 | 24 |
-| Vancouver GeoJSON | 22 neighborhoods | Boundaries |
-| **Final Dataset** | **3,375** | **16** |
-
-**Data Quality:**
-- ✅ 3,860 Vancouver properties extracted
-- ✅ 485 rows removed (missing values)
-- ✅ All features cleaned & validated
-
----
-
-## 📦 TECHNOLOGIES
+## 📦 Technologies
 
 - **Python 3.13** — Core language
 - **pandas, numpy** — Data processing
@@ -195,47 +206,61 @@ jupyter notebook notebooks/01_eda.ipynb
 
 ---
 
-## 👥 TEAM
+## 📊 Data
 
-- **[Your Name]** — EDA, Spatial Analysis, Geographic Visualization
-- **Geny** — Data Cleaning, Predictive Modeling, Clustering
-
----
-
-## 📅 PROJECT TIMELINE
-
-- **Week 1:** ✅ Setup & EDA
-- **Week 2:** ✅ Spatial Join & Geographic Analysis
-- **Week 3:** ✅ Modeling & Clustering
-- **Week 4:** 📄 Final Report & 🎤 Presentation (Due May 30)
+| Source | Records | Features |
+|---|---|---|
+| Kaggle Canada Housing | ~44,896 total | 23 |
+| Vancouver GeoJSON | 22 neighborhoods | Boundaries |
+| **Final ML Dataset** | **3,542** | **34** |
 
 ---
 
-## 📈 QUICK STATS
-Neighborhoods: 22
-Properties: 3,875
-Price Range: $289,900 - $49,800,000
-Median Price: $1,539,800
-Model Accuracy: 87.05%
-Top Feature: Square Footage (77.6%)
+## 👥 Team
+
+| Name | Role |
+|---|---|
+| **Majda** | EDA · Data Cleaning · Spatial Join · Geographic Visualization |
+| **Geny** | Machine Learning Models · Clustering · Feature Importance |
 
 ---
 
-## 🚀 FUTURE WORK
+## 🌿 Git Workflow
 
-- [ ] Hyperparameter tuning
-- [ ] XGBoost & advanced models
-- [ ] Real-time pricing API
-- [ ] Web deployment
-- [ ] Time-series price trends
-
----
-
-## 📞 CONTACT
-
-**GitHub Issues:** [Report bugs or ask questions](https://github.com/majdalinasser9-ux/vancouver-housing-project/issues)
+```
+main
+ └── development
+      ├── feature/eda-spatial-analysis     (Majda)
+      └── feature/modeling-lr-rf           (Geny)
+```
 
 ---
 
-**Built with ❤️ for Vancouver real estate insights**  
-**Last Updated:** May 2026
+## 📅 Timeline
+
+| Week | Focus | Status |
+|---|---|---|
+| Week 2 | EDA, cleaning, spatial join, models | ✅ Done |
+| Week 3 | Heatmap, clustering, model comparison | ✅ Done |
+| Week 4 | Final report & presentation | 🎤 Due May 30 |
+
+---
+
+## 🚀 Future Work
+
+- Hyperparameter tuning (GridSearchCV)
+- XGBoost & advanced ensemble models
+- Real-time pricing API integration
+- Web deployment dashboard
+- Time-series price trend analysis
+
+---
+
+## 📄 Data Sources
+
+- [Kaggle — Canada Housing Dataset](https://www.kaggle.com/datasets/yuliiabulana/canada-housing)
+- [City of Vancouver Open Data — Local Area Boundary](https://opendata.vancouver.ca/explore/dataset/local-area-boundary/)
+
+---
+
+*DS301 Final Project · CICCC Data Science Program · 2025–2026*
