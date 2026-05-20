@@ -263,4 +263,4 @@ main
 
 ---
 
-*DS301 Final Project · CICCC Data Science Program · 2025–2026*
+*DS302 Final Project · CICCC Data Science Program · 2025–2026*
